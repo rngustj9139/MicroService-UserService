@@ -1,0 +1,24 @@
+server:
+    port: 0
+
+spring:
+    application:
+        name: user-service
+    h2:
+        console:
+            enabled: true
+            settings:
+                web-allow-others: true # 외부에서의 접속을 허용
+            path: /h2-console # 브라우저에 localhost:63141/h2-console 입력하면 h2 창으로 이동하게 된다. (Generic H2 (Embedded)를 선택해야한다.)
+
+eureka:
+    instance:
+        instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    client:
+        register-with-eureka: true
+        fetch-registry: true
+        service-url:
+            defaultZone: http://127.0.0.1:8761/eureka
+
+greeting:
+    message: Welcome to the simple E-commerce.
