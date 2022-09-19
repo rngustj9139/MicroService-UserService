@@ -9,7 +9,7 @@ spring:
             enabled: true
             settings:
                 web-allow-others: true # 외부에서의 접속을 허용
-            path: /h2-console # 브라우저에 localhost:63141/h2-console 입력하면 h2 창으로 이동하게 된다. (Generic H2 (Embedded)를 선택해야한다.)
+            path: /h2-console # 브라우저에 localhost:포트번호/h2-console 입력하면 h2 창으로 이동하게 된다. (Generic H2 (Embedded)를 선택해야한다.)
     datasource:
         driver-class-name: org.h2.Driver
         url: jdbc:h2:mem:testdb # url은 jdbc:h2:mem:testdb 이고 user name은 sa이다.
