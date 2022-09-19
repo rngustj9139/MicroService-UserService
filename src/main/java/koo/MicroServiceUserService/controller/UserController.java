@@ -1,6 +1,7 @@
 package koo.MicroServiceUserService.controller;
 
 import koo.MicroServiceUserService.dto.UserDto;
+import koo.MicroServiceUserService.repository.UserEntity;
 import koo.MicroServiceUserService.service.UserService;
 import koo.MicroServiceUserService.vo.Greeting;
 import koo.MicroServiceUserService.vo.RequestUser;
@@ -14,8 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
-@RequestMapping("/")
+@RequestMapping("/user-service")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -29,7 +33,7 @@ public class UserController {
 
     @GetMapping("/health_check")
     public String status() {
-        return "It's working in User Service";
+        return String.format("It's working in User Service on PORT %s", env.getProperty("local.server.port"));
     }
 
     @GetMapping("/welcome")
@@ -38,7 +42,7 @@ public class UserController {
         return gretting.getMessage();
     }
 
-    @PostMapping("/users")
+    @PostMapping("/users") // 사용자 회원가입
     public ResponseEntity<ResponseUser> createUser(@RequestBody RequestUser user) {
         ModelMapper mapper = new ModelMapper(); //  ModelMapper는 DTO를 엔티티로 바꿀때 쉽게 바꿀수 있게 해주는 해준다. (pom.xml에서 의존성을 추가해야한다.)
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 딱 맞아 떨어지지 않으면 변환을 못하게 전략 설정
@@ -50,6 +54,29 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(responseUser);
+    }
+
+    @GetMapping("/users") // 전체 사용자 조회
+    public ResponseEntity<List<ResponseUser>> getUsers() {
+        Iterable<UserEntity> userList = userService.getUserByAll();
+        List<ResponseUser> result = new ArrayList<>();
+
+        userList.forEach(v -> {
+            result.add(new ModelMapper().map(v, ResponseUser.class));
+        });
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(result);
+    }
+
+    @GetMapping("/users/{userId}") // 특정 사용자 조회
+    public ResponseEntity<ResponseUser> getUser(@PathVariable("userId") String userId) {
+        UserDto userDto = userService.getUserByUserId(userId);
+
+        ResponseUser result = new ModelMapper().map(userDto, ResponseUser.class);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(result);
     }
 
 }
