@@ -2,8 +2,9 @@ package koo.MicroServiceUserService.service;
 
 import koo.MicroServiceUserService.dto.UserDto;
 import koo.MicroServiceUserService.repository.UserEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
     UserDto createUser(UserDto userDto);
 
