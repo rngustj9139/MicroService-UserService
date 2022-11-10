@@ -26,8 +26,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception { // 인가에 관한 configure 함수
         http.csrf().disable();
 //      http.authorizeRequests().antMatchers("/users/**").permitAll();
-        http.authorizeRequests().antMatchers("/**")
-                .access("hasIpAddress('" + "192.168.219.102" + "')") // 이 IP를 가진사람만 인가
+        http.authorizeRequests()
+                .antMatchers("/error/**").permitAll()
+                .antMatchers("/**").permitAll()
+//                .hasIpAddress("127.0.0.1") // 이 IP를 가진사람만 인가
                 .and()
                 .addFilter(getAuthenticationFilter()); // 인증 필터를 통과했을 경우에만 인가한다.
 
