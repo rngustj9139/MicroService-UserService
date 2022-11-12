@@ -12,4 +12,5 @@ public interface UserService extends UserDetailsService { // UserDetails는 사�
 
     Iterable<UserEntity> getUserByAll();
 
+    UserDto getUserDetailsByEmail(String userName);
 }

@@ -73,4 +73,17 @@ public class UserServiceImpl implements UserService {
         return new User(userEntity.getEmail(), userEntity.getEncryptedPwd(), true, true, true, true, new ArrayList<>()); // User 클래스는 security에서 제공하는 클래스이다. ArrayList에는 로그인이 되었을떼 그 다음에 할 수 있는 작업중에서 권한을 추가하는 작업을 넣으면 된다.
     }
 
+    @Override
+    public UserDto getUserDetailsByEmail(String email) {
+        UserEntity userEntity = userRepository.findByEmail(email);
+
+        if (userEntity == null) {
+            throw new UsernameNotFoundException(email);
+        }
+
+        UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
+
+        return userDto;
+    }
+
 }

@@ -34,6 +34,12 @@
 			<scope>runtime</scope> <!-- scope가 test로 되면 우리가 어플리케이션을 실행시키고 나서 결과를 확인할 수 없으므로 runtime으로 바꾼다. -->
 		</dependency>
 
+		<dependency> <!-- jwt를 발행하기 위해 사용 -->
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>

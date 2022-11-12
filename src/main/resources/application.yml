@@ -25,5 +25,9 @@ eureka:
         service-url:
             defaultZone: http://127.0.0.1:8761/eureka
 
+token:
+    expiration_time: 86400000 # jwt 만료기한 지정: 하루
+    secret: user_token # 임의의 값 지정하기
+
 greeting:
     message: Welcome to the simple E-commerce.

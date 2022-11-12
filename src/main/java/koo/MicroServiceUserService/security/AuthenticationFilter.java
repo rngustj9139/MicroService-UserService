@@ -1,8 +1,14 @@
 package koo.MicroServiceUserService.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import koo.MicroServiceUserService.dto.UserDto;
+import koo.MicroServiceUserService.service.UserService;
 import koo.MicroServiceUserService.vo.RequestLogin;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -15,9 +21,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 @Slf4j
+@RequiredArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter { // 로그인 시도시 제일 먼저 작동되는 필터
+
+    private final UserService userService;
+    private final Environment env;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -37,6 +48,18 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         log.info(((User) authResult.getPrincipal()).getUsername()); // User는 UserServiceImpl의 loadUserByUsername에서 반환되는 객체이다.(로그인 성공시 반환되는 객체)
 
         // 이후 로그인이 유지될 수 있도록 JWT 발행 (json Web Token)
+        String userName = ((User) authResult.getPrincipal()).getUsername(); // userName은 email이다.
+        UserDto userDetails = userService.getUserDetailsByEmail(userName);
+
+        // jjwt dependency 추가해야함
+        String token = Jwts.builder()
+                .setSubject(userDetails.getUserId())
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time")))) // 현재 시점에다가 24시간을 더함 (24시간 뒤 만료)
+                .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret")) // 암호화 방식 지정, token.secret은 식별을 위해 지정함
+                .compact();
+
+        response.addHeader("token", token);
+        response.addHeader("userId", userDetails.getUserId()); // 토큰이 정상적으로 만들어진 것인지 확인을 위해 userId도 리턴
     }
 
 }
