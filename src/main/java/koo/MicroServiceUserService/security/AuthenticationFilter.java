@@ -58,7 +58,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret")) // 암호화 방식 지정, token.secret은 식별을 위해 지정함
                 .compact();
 
-        response.addHeader("token", token);
+        response.addHeader("token", token); // token을 decode 해보면 userId값과 만료기한 정보가 들어가있음. 만약 사용자가 보낸 헤더에서 토큰 속의 userId값과 사용자가 직접적으로 보낸 userId값이 맞으면 인증이 된다.
         response.addHeader("userId", userDetails.getUserId()); // 토큰이 정상적으로 만들어진 것인지 확인을 위해 userId도 리턴
     }
 
