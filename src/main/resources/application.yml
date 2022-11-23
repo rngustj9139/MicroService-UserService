@@ -29,5 +29,11 @@ eureka:
 #    expiration_time: 86400000 # jwt 만료기한 지정: 하루
 #    secret: user_token # 임의의 값 지정하기
 
+management: # 깃에 저장된 ecommerce.yml의 내용을 변경할때마다 user-service를 재가동해야함 이런 불펀을 해결하기위해 애플리케이션 변경을 모니터링하는 actuator나 spring cloud bus가 필요하다
+    endpoints:
+        web:
+            exposure:
+                include: refresh, health, beans # 3가지의 actuator 등록 (ecommerce.yml 파일을 변경하고 로컬 깃에 커밋한뒤, postman으로 http://localhost:~~~~/actuator/refresh에 아무 값 없이 post 요청을 보내야지 user-service의 재시작 없이 변경된 값을 적용 가능하다.)
+
 greeting:
     message: Welcome to the simple E-commerce.

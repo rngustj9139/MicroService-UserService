@@ -27,6 +27,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 //      http.authorizeRequests().antMatchers("/users/**").permitAll();
         http.authorizeRequests()
+                .antMatchers("/actuator/**").permitAll() // 깃에 저장된 ecommerce.yml의 내용을 변경할때마다 user-service를 재가동해야함 이런 불펀을 해결하기위해 애플리케이션 변경을 모니터링하는 actuator나 spring cloud bus가 필요하다
                 .antMatchers("/error/**").permitAll()
                 .antMatchers("/**").permitAll()
 //                .hasIpAddress("127.0.0.1") // 이 IP를 가진사람만 인가
