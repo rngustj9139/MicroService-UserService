@@ -5,3 +5,5 @@ spring:
     config:
       uri: http://localhost:8888 # spring cloud config server를 이용한다.
       name: ecommerce # spring cloud config server local git의 ecommerce.yml 파일을 이용한다.
+  profiles:
+    active: dev # 개발 환경 (ecommerce-dev.yml 이용)
